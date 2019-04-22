@@ -27,8 +27,8 @@
             string="X Report"
             model="pos.session"
             report_type="qweb-pdf"
-            file="cortes_x_z.front_sales_thermal_report_template"
-            name="cortes_x_z.front_sales_thermal_report_template"
+            file="cortes_x_z.front_sales_thermal_report_x_template"
+            name="cortes_x_z.front_sales_thermal_report_x_template"
             menu="False"
         />
 
@@ -116,9 +116,6 @@
                                                   ref('cortes_x_z.report_x_pos_sales_thermal_front'),
                                                   ref('cortes_x_z.report_pos_inventory_session_pdf_front'),
                                                   ref('cortes_x_z.report_pos_inventory_location_pdf_front')])]"/>
-
-
-
         </record>
 
     </data>
