@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################################################################
-# Author      : Acespritech Solutions Pvt. Ltd. (<www.acespritech.com>)
-# Copyright(c): 2012-Present Acespritech Solutions Pvt. Ltd.
+# Author      :
+# Copyright(c):
 # All Rights Reserved.
 #
 # This program is copyright property of the author mentioned above.
@@ -12,7 +12,7 @@
 from odoo import models, api, _
 
 class sales_details_pdf_template(models.AbstractModel):
-    _name = 'report.aspl_pos_report.sales_details_pdf_template'
+    _name = 'report.cortesXyZ.sales_details_pdf_template'
 
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -27,7 +27,7 @@ class sales_details_pdf_template(models.AbstractModel):
                 }
 
 class front_sales_report_pdf_template(models.AbstractModel):
-    _name = 'report.aspl_pos_report.front_sales_report_pdf_template'
+    _name = 'report.cortesXyZ.corteX_front_sales_report_pdf_template'
 
     @api.model
     def _get_report_values(self, docids, data=None):

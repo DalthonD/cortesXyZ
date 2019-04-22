@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################################################################
-# Author      : Acespritech Solutions Pvt. Ltd. (<www.acespritech.com>)
-# Copyright(c): 2012-Present Acespritech Solutions Pvt. Ltd.
+# Author      :
+# Copyright(c):
 # All Rights Reserved.
 #
 # This program is copyright property of the author mentioned above.
