@@ -38,7 +38,7 @@ class wizard_sales_details(models.TransientModel):
         datas = {'ids': self._ids,
                  'form': self.read()[0],
                  'model': 'wizard.sales.details'}
-        return self.env.ref('aspl_pos_report.report_sales_details_pdf').report_action(self, data=datas)
+        return self.env.ref('cortes_x_z.report_sales_details_pdf').report_action(self, data=datas)
 
     @api.onchange('start_date', 'end_date')
     def onchange_date(self):

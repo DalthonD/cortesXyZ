@@ -1,4 +1,4 @@
-odoo.define('aspl_pos_report.pos', function (require) {
+odoo.define('cortes_x_z.pos', function (require) {
 "use strict";
 
     var gui = require('point_of_sale.gui');
@@ -138,7 +138,7 @@ odoo.define('aspl_pos_report.pos', function (require) {
         session_report_pdf: function(e){
         	var self = this;
         	var session_id = $(e.currentTarget).data('id');
-        	self.pos.chrome.do_action('aspl_pos_report.report_pos_inventory_session_pdf_front',{additional_context:{
+        	self.pos.chrome.do_action('cortes_x_z.report_pos_inventory_session_pdf_front',{additional_context:{
                 active_ids:[session_id],
             }}).fail(function(){
             	alert("Connection lost");
@@ -147,7 +147,7 @@ odoo.define('aspl_pos_report.pos', function (require) {
         session_report_thermal: function(e){
         	var self = this;
         	var session_id = $(e.currentTarget).data('id');
-        	var report_name = "aspl_pos_report.front_inventory_session_thermal_report_template";
+        	var report_name = "cortes_x_z.front_inventory_session_thermal_report_template";
             var params = {
 				model: 'ir.actions.report',
 				method: 'get_html_report',
@@ -163,7 +163,7 @@ odoo.define('aspl_pos_report.pos', function (require) {
         location_report_pdf: function(e){
         	var self = this;
         	var location_id = $(e.currentTarget).data('id');
-        	self.pos.chrome.do_action('aspl_pos_report.report_pos_inventory_location_pdf_front',{additional_context:{
+        	self.pos.chrome.do_action('cortes_x_z.report_pos_inventory_location_pdf_front',{additional_context:{
                 active_ids:[location_id],
             }}).fail(function(){
             	alert("Connection lost");
@@ -172,7 +172,7 @@ odoo.define('aspl_pos_report.pos', function (require) {
         location_report_thermal: function(e){
         	var self = this;
         	var location_id = $(e.currentTarget).data('id');
-        	var report_name = "aspl_pos_report.front_inventory_location_thermal_report_template";
+        	var report_name = "cortes_x_z.front_inventory_location_thermal_report_template";
             var params = {
 				model: 'ir.actions.report',
 				method: 'get_html_report',

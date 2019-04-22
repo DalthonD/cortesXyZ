@@ -17,7 +17,7 @@ class sales_details_pdf_template(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         report = self.env['ir.actions.report'].\
-            _get_report_from_name('aspl_pos_report.sales_details_pdf_template')
+            _get_report_from_name('cortes_x_z.sales_details_pdf_template')
         if data and data.get('form') and data.get('form').get('user_ids'):
             docids = self.env['wizard.sales.details'].browse(data['form']['user_ids'])
         return {'doc_ids': self.env['wizard.sales.details'].browse(data.get('ids')),
@@ -31,7 +31,7 @@ class front_sales_report_pdf_template(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        report = self.env['ir.actions.report']._get_report_from_name('aspl_pos_report.front_sales_report_pdf_template')
+        report = self.env['ir.actions.report']._get_report_from_name('cortes_x_z.front_sales_report_pdf_template')
         if data and data.get('form') and data.get('form').get('session_ids'):
             docids = self.env['pos.session'].browse(data['form']['session_ids'])
         return {'doc_ids': self.env['wizard.pos.x.report'].browse(data['ids']),
@@ -46,7 +46,7 @@ class pos_sales_report_pdf_template(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         report = self.env['ir.actions.report'].\
-            _get_report_from_name('aspl_pos_report.pos_sales_report_pdf_template')
+            _get_report_from_name('cortes_x_z.pos_sales_report_pdf_template')
         if data and data.get('form') and data.get('form').get('session_ids'):
             docids = self.env['pos.session'].browse(data['form']['session_ids'])
         return {'doc_ids': self.env['wizard.pos.sale.report'].browse(data['ids']),

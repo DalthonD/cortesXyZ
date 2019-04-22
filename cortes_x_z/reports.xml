@@ -23,7 +23,7 @@
         />
 
         <report
-            id="reportX_pos_sales_thermal_front"
+            id="report_x_pos_sales_thermal_front"
             string="X Report"
             model="pos.session"
             report_type="qweb-pdf"

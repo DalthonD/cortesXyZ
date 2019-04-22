@@ -49,11 +49,11 @@
 		                                </td>
 		                                <td class="report" t-att-title="'Thermal Report of ' + session.name + ' Session'">
 		                                    <t t-if="widget.enable_thermal_print">
-		                                        <img class="report_thermal session" t-att-data-id="session.id" src="/aspl_pos_report/static/src/img/printer.png" style="width: 30px;"/>
+		                                        <img class="report_thermal session" t-att-data-id="session.id" src="/cortes_x_z/static/src/img/printer.png" style="width: 30px;"/>
 		                                    </t>
 		                                </td>
 		                                <td class="report" t-att-title="'PDF Report of ' + session.name + ' Session'" style="text-align: right;padding-right: 20px;">
-		                                    <img class="report_pdf session" src="/aspl_pos_report/static/src/img/pdf.png" t-att-data-id="session.id"/>
+		                                    <img class="report_pdf session" src="/cortes_x_z/static/src/img/pdf.png" t-att-data-id="session.id"/>
 		                                </td>
 		                            </tr>
 		                        </t>
@@ -79,11 +79,11 @@
 	                                    </td>
 	                                    <td class="report" t-att-title="'Thermal Report of ' + location.name + ' Location'">
 	                                        <t t-if="widget.enable_thermal_print">
-	                                            <img class="report_thermal location" t-att-data-id="location.id" src="/aspl_pos_report/static/src/img/printer.png" style="width: 30px;"/>
+	                                            <img class="report_thermal location" t-att-data-id="location.id" src="/cortes_x_z/static/src/img/printer.png" style="width: 30px;"/>
 	                                        </t>
 	                                    </td>
 	                                    <td class="report" t-att-title="'PDF Report of ' + location.name + ' Location'" style="text-align: right;padding-right: 20px;">
-	                                        <img class="report_pdf location" src="/aspl_pos_report/static/src/img/pdf.png" t-att-data-id="location.id"/>
+	                                        <img class="report_pdf location" src="/cortes_x_z/static/src/img/pdf.png" t-att-data-id="location.id"/>
 	                                    </td>
 	                                </tr>
 	                            </t>

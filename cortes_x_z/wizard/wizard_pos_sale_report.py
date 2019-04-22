@@ -26,7 +26,7 @@ class wizard_pos_sale_report(models.TransientModel):
                  'form': self.read()[0],
                  'model': 'wizard.pos.sale.report'
                 }
-        return self.env.ref('aspl_pos_report.report_pos_sales_pdf').report_action(self, data=datas)
+        return self.env.ref('cortes_x_z.report_pos_sales_pdf').report_action(self, data=datas)
 
     session_ids = fields.Many2many('pos.session', 'pos_session_list', 'wizard_id', 'session_id', string="Closed Session(s)")
     report_type = fields.Selection([('thermal', 'Thermal'),
