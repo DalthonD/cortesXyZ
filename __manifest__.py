@@ -9,20 +9,13 @@
 #
 #################################################################################
 {
-    'name': 'POS Reports',
+    'name': 'POS Reports-SV',
     'category': 'Point of Sale',
-    'summary': """Allows user to print X-Report, Z-Report, Sales Summary report,
-            Product Summary Report,Order Summary Report,Payment Summary Report and 
-            Session & Inventory Audit Report.""",
-    'description': """
-Allows user to print X-Report, Z-Report, Sales Summary report,
-            Product Summary Report,Order Summary Report,Payment Summary Report
-            and Session & Inventory Audit Report.
-""",
-    'author': "Acespritech Solutions Pvt. Ltd.",
-    'website': "http://www.acespritech.com",
-    'price': 58.00,
-    'currency': 'EUR',
+    'summary': """Allows user to print X-Report, Z-Report""",
+    'description': """Allows user to print X-Report, Z-Report.""",
+    'author': "Stretegi-k",
+    'website': "http://Strategi-k.com",
+    'currency': 'USD',
     'version': '1.0',
     'depends': ['point_of_sale', 'base'],
     'images': ['static/description/main_screenshot.png'],
