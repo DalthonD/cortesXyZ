@@ -6,7 +6,7 @@
                 <t t-call="web.basic_layout">
                 <div class="page">
                     <div align="center" style="border:1px solid black;margin:0 auto;padding:0 auto;font-size:25px">
-                        <strong>Z Report</strong>
+                        <strong>REPORTE Z</strong>
                     </div>
                     <t t-foreach="docs" t-as="o">
                         <table style="width:100%;margin-top:15px;">

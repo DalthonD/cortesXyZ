@@ -6,7 +6,7 @@
                 <t t-foreach="docs" t-as="receipt">
                     <div align="center">
                         <div size='double-height' style="font-size:20px;">
-                            <div>X-REPORT</div> 
+                            <div>REPORTE X</div> 
                                 ====================================
                             <br />
                             <t t-if="receipt.get_company_data_x().rml_header1">

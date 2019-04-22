@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 #################################################################################
-# Author      : Acespritech Solutions Pvt. Ltd. (<www.acespritech.com>)
-# Copyright(c): 2012-Present Acespritech Solutions Pvt. Ltd.
+# Author      :
+# Copyright(c):
 # All Rights Reserved.
 #
 # This program is copyright property of the author mentioned above.
 # You can`t redistribute it and/or modify it.
-#
+#'views/front_inventory_session_pdf_report_template.xml',
+#'views/front_inventory_session_thermal_report_template.xml',
+#'views/front_inventory_location_pdf_report_template.xml',
+#'views/front_inventory_location_thermal_report_template.xml',
 #################################################################################
 {
     'name': 'POS Reports-SV',
@@ -21,15 +24,11 @@
     'images': ['static/description/main_screenshot.png'],
     'data': [
         'reports.xml',
-        'views/aspl_pos_report.xml',
-        'views/pos_sales_report_pdf_template.xml',
+        'views/pos_report.xml',
+        'views/corteZ_pos_sales_report_pdf_template.xml',
+        'views/corteX_front_sales_report_pdf_template.xml',
         'views/sales_details_pdf_template.xml',
-        'views/front_sales_report_pdf_template.xml',
         'views/pos_config_view.xml',
-        'views/front_inventory_session_pdf_report_template.xml',
-        'views/front_inventory_session_thermal_report_template.xml',
-        'views/front_inventory_location_pdf_report_template.xml',
-        'views/front_inventory_location_thermal_report_template.xml',
         'views/pos_static_register.xml',
         'wizard/wizard_pos_sale_report_view.xml',
         'wizard/wizard_sales_details_view.xml',

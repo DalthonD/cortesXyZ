@@ -5,7 +5,7 @@
             <receipt align='center' width='40' value-thousands-separator='' >
                 <t t-foreach="docs" t-as="receipt">
                     <div size='double-height' style="font-size:20px;" align="center">
-                        Z Report
+                        REPORTE Z
                     </div>
                     <div align="center">
                         ================
