@@ -21,7 +21,7 @@
                             default="pdf"/>
                         </group>
                         <group>
-                            <field name="proxy_ip" 
+                            <field name="proxy_ip"
                                    placeholder="http://1.1.1.1:8069"
                                    attrs="{'invisible':[('report_type' ,'!=','thermal')],'required':[('report_type' ,'=','thermal')]}"/>
                         </group>
@@ -55,7 +55,7 @@
         </record>
 
         <menuitem action="action_wizard_sales_details" id="menu_print_sales_details"
-                  name="Sales Summary" parent="menu_main_print_pos_sale_report" sequence='3'/>
+                  name="Resumen de ventas" parent="menu_main_print_pos_sale_report" sequence='3'/>
 
     </data>
 </odoo>
