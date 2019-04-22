@@ -25,8 +25,8 @@
     'data': [
         'reports.xml',
         'views/pos_report.xml',
-        'views/corteZ_pos_sales_report_pdf_template.xml',
-        'views/corteX_front_sales_report_pdf_template.xml',
+        'views/corte_z_pos_sales_report_pdf_template.xml',
+        'views/corte_x_front_sales_report_pdf_template.xml',
         'views/sales_details_pdf_template.xml',
         'views/pos_config_view.xml',
         'views/pos_static_register.xml',

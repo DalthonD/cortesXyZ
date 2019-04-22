@@ -12,7 +12,7 @@
 from odoo import models, api, _
 
 class sales_details_pdf_template(models.AbstractModel):
-    _name = 'report.cortesXyZ.sales_details_pdf_template'
+    _name = 'report.cortes_x_z.sales_details_pdf_template'
 
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -27,7 +27,7 @@ class sales_details_pdf_template(models.AbstractModel):
                 }
 
 class front_sales_report_pdf_template(models.AbstractModel):
-    _name = 'report.cortesXyZ.corteX_front_sales_report_pdf_template'
+    _name = 'report.cortes_x_z.corteX_front_sales_report_pdf_template'
 
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -41,7 +41,7 @@ class front_sales_report_pdf_template(models.AbstractModel):
                 }
 
 class pos_sales_report_pdf_template(models.AbstractModel):
-    _name = 'report.aspl_pos_report.pos_sales_report_pdf_template'
+    _name = 'report.cortes_x_z.pos_sales_report_pdf_template'
 
     @api.model
     def _get_report_values(self, docids, data=None):
