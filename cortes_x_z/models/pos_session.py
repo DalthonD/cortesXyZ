@@ -522,19 +522,167 @@ class pos_session(models.Model):
             else:
                 return {}
 
+    #############FACTURA#############
     @api.multi
-    def get_invoice_range(self):
-        fiscal_position_contri_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','True']).id
+    def get_invoice_range_no_contr(self):
+        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','False']).id
         #Facturas de contribuyentes
-        pos_order_recibo = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_contri_ids)],order='asc').recibo_number
+        pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)],order='asc').recibo_number
         fac_in = 0
         fac_fin = 0
-        if pos_order_recibo:
-            fac_in = pos_order_recibo[0]
-            fac_fin = pos_order_recibo[-1]
+        if pos_order_recibos:
+            fac_in = pos_order_recibos[0]
+            fac_fin = pos_order_recibos[-1]
         invran = "{0} -- {1}".format(fac_in,fac_fin)
         return invran
 
+    @api.multi
+    def get_total_sales_invoice_gravado_no_contr(self):
+        total_price = 0.0
+        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','False'),('sv_clase','=','Gravado')]).id
+        #Facturas de contribuyentes Gravadas
+        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)])
+        if pos_order_recibos:
+            for order in pos_order_recibos_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_sales_invoice_exento_no_contr(self):
+        total_price = 0.0
+        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','False'),('sv_clase','=','Exento')]).id
+        #Facturas de contribuyentes Exentas
+        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)])
+        if pos_order_recibos:
+            for order in pos_order_recibos_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_sales_invoice_no_aplica_no_contr(self):
+        total_price = 0.0
+        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','False'),('sv_clase','=','No Aplica')]).id
+        #Facturas de contribuyentes No Sujetas
+        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)])
+        if pos_order_recibos:
+            for order in pos_order_recibos_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+    #############################
+
+    #############CCF#############
+    @api.multi
+    def get_invoice_range_ccf(self):
+        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','True']).id
+        #Facturas de contribuyentes
+        pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)],order='asc').recibo_number
+        fac_in = 0
+        fac_fin = 0
+        if pos_order_recibos:
+            fac_in = pos_order_recibos[0]
+            fac_fin = pos_order_recibos[-1]
+        invran = "{0} -- {1}".format(fac_in,fac_fin)
+        return invran
+
+    @api.multi
+    def get_total_sales_invoice_gravado_ccf(self):
+        total_price = 0.0
+        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','True'),('sv_clase','=','Gravado')]).id
+        #Facturas de contribuyentes Gravadas
+        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)])
+        if pos_order_recibos:
+            for order in pos_order_recibos_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_sales_invoice_exento_ccf(self):
+        total_price = 0.0
+        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','True'),('sv_clase','=','Exento')]).id
+        #Facturas de contribuyentes Exentas
+        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)])
+        if pos_order_recibos:
+            for order in pos_order_recibos_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_sales_invoice_no_aplica_ccf(self):
+        total_price = 0.0
+        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','True'),('sv_clase','=','No Aplica')]).id
+        #Facturas de contribuyentes No Sujetas
+        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)])
+        if pos_order_recibos:
+            for order in pos_order_recibos_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+    ############################
+
+    #############TIQUETE#############
+    @api.multi
+    def get_ticket_range(self):
+        #No. Tickets
+        pos_order_tickets = self.env["pos.order"].search([('invoice_group','=','False'),('session_id','=',self.id)],order='asc').ticket_number
+        ticket_in = 0
+        ticket_fin = 0
+        if pos_order_tickets:
+            ticket_in = pos_order_tickets[0]
+            ticket_fin = pos_order_tickets[-1]
+        ticketsran = "{0} -- {1}".format(ticket_in,ticket_fin)
+        return ticketsran
+
+    @api.multi
+    def get_total_sales_ticket_gravado(self):
+        total_price = 0.0
+        fiscal_position_ids = self.env["account.fiscal.position"].search(['sv_clase','=','Gravado']).id
+        #Tickets Gravadas
+        pos_order_tickets_obj = self.env["pos.order"].search([('invoice_group','=','False'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ids)])
+        if pos_order_tickets_obj:
+            for order in pos_order_tickets_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_sales_ticket_exento(self):
+        total_price = 0.0
+        fiscal_position_ids = self.env["account.fiscal.position"].search([('sv_clase','=','Exento')]).id
+        #Tickets Exentos
+        pos_order_tickets_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_contri_ids)])
+        if pos_order_tickets_obj:
+            for order in pos_order_tickets_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_sales_ticket_no_aplica(self):
+        total_price = 0.0
+        fiscal_position_ids = self.env["account.fiscal.position"].search([('sv_clase','=','No Aplica')]).id
+        #Tickets Sujetos
+        pos_order_tickets_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_contri_ids)])
+        if pos_order_tickets_obj:
+            for order in pos_order_tickets_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_sales_tickets(self):
+        total_price = 0.0
+        pos_order_tickets_obj = self.env["pos.order"].search([('invoice_group','=','False'),('session_id','=',self.id)])
+        if pos_order_tickets_obj:
+            for order in pos_order_tickets_obj:
+                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+        return total_price
+
+    @api.multi
+    def get_total_returns_tickets_x(self):
+        pos_order_obj = self.env['pos.order'].search([('invoice_group','=','False'),('session_id','=',self.id)])
+        total_return = 0.0
+        if self:
+            for order in pos_order_obj:
+                if order.amount_total < 0:
+                    total_return += abs(order.amount_total)
+        return total_return
+    ############################
 
 class res_company(models.Model):
     _inherit = 'res.company'
