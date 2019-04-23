@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################################################################
 # Author      :
-# Copyright(c): 
+# Copyright(c):
 # All Rights Reserved.
 #
 # This program is copyright property of the author mentioned above.
@@ -521,6 +521,19 @@ class pos_session(models.Model):
                     return data
             else:
                 return {}
+
+    @api.multi
+    def get_invoice_range(self):
+        fiscal_position_contri_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','True']).id
+        #Facturas de contribuyentes
+        pos_order_recibo = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_contri_ids)],order='asc').recibo_number
+        fac_in = 0
+        fac_fin = 0
+        if pos_order_recibo:
+            fac_in = pos_order_recibo[0]
+            fac_fin = pos_order_recibo[-1]
+        invran = "{0} -- {1}".format(fac_in,fac_fin)
+        return invran
 
 
 class res_company(models.Model):

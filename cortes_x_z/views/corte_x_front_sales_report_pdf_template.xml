@@ -72,7 +72,7 @@
 										POS #
 									</td>
 									<td class="text-right">
-										<span t-esc="o.config_id"/>---<span t-esc="o.display_name"/>
+										<span t-esc="o.config_id"/>---<span t-esc="o.config_id.name"/>---<span t-esc="o.display_name"/>
 									</td>
 								</tr>
 								<tr>
@@ -88,7 +88,7 @@
 										USUARIO:
 									</td>
 									<td class="text-right">
-										<span t-esc="o.user_id"/>
+										<span t-esc="o.user_id.name"/>
 									</td>
 								</tr>
 								<tr>
@@ -120,7 +120,7 @@
               <table style="width:100%;margin-top:15px;">
                 <tr>
                   <td class="text-left">
-                    FACTURAS: <span t-esc=""/>
+                    FACTURAS: <span t-esc="o.get_invoice_range()"/>
                   </td>
                 </tr>
                 <tr>
@@ -213,6 +213,22 @@
                 </tr>
                 <tr>
                   <td class="text-left">
+                    TOTAL VENTAS
+                  </td>
+                  <td class="text-right">
+                    <span t-field="o.currency_id.symbol"/>0.0
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-left">
+                    DEVOLUCIONES
+                  </td>
+                  <td class="text-right">
+                    <span t-field="o.currency_id.symbol"/>0.0
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-left">
                     TOTAL VENTAS GRAVADAS
                   </td>
                   <td class="text-right">
@@ -255,44 +271,30 @@
                 ---------------------------------------------------------------------------------------
               </div>
               <table style="width:100%;margin-top:15px;">
-                <tr>
-                  <td class="text-left">
-                    EFECTIVO
-                  </td>
-                  <td class="text-right">
-                    <span t-field="o.currency_id.symbol"/>0.0
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-left">
-                    TARJETA
-                  </td>
-                  <td class="text-right">
-                    <span t-field="o.currency_id.symbol"/>0.0
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-left">
-                    CHEQUE
-                  </td>
-                  <td class="text-right">
-                    <span t-field="o.currency_id.symbol"/>0.0
-                  </td>
-                </tr>
+								<t t-set="total" t-value="0"/>
+								<tr t-foreach="o.get_payments()" t-as="l">
+									<td class="text-left">
+										<span t-esc="l.get('name')"/>
+									</td>
+									<td class="text-right">
+										<span t-field="o.currency_id.symbol"/><span t-esc="l.get('sum')"/>
+									</td>
+								</tr>
                 <tr>
                   <td align="right" colspan="2">
                     ----------------------
                   </td>
+                  <t t-set="total" t-value="total + l.get('sum')"/>
                 </tr>
                 <tr>
                   <td class="text-left">
-                    TOTAL
+                  TOTAL
                   </td>
-                  <td class="text-right">
-                    <span t-field="o.currency_id.symbol"/>0.0
+                  <td style="width:50%; !important" class="text-right">
+                    <span t-esc="total" t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                   </td>
                 </tr>
-              </table>
+							</table>
 
 
 
@@ -391,18 +393,7 @@
 									</tr>
 								</table>
 							</t>
-							<table style="width:100%;margin-top:15px;">
-								<t t-set="total" t-value="0"/>
-								<tr t-foreach="o.get_payments()" t-as="l">
-									<td class="text-left">
-										<span t-esc="l.get('name')"/>
-									</td>
-									<td class="text-right">
-										<span t-field="o.currency_id.symbol"/><span t-esc="l.get('sum')"/>
-									</td>
-									<t t-set="total" t-value="total + l.get('sum')"/>
-								</tr>
-							</table>
+
 							<table style="width:100%">
 								<tr>
 									=======================
