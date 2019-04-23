@@ -533,7 +533,7 @@ class pos_session(models.Model):
         if pos_order_recibos:
             fac_in = pos_order_recibos[0]
             fac_fin = pos_order_recibos[-1]
-        invran = "{0} -- {1}".format(fac_in,fac_fin)
+        invran = "{0}--{1}".format(fac_in,fac_fin)
         return invran
 
     @api.multi
