@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################################################################
-# Author      : Acespritech Solutions Pvt. Ltd. (<www.acespritech.com>)
-# Copyright(c): 2012-Present Acespritech Solutions Pvt. Ltd.
+# Author      :
+# Copyright(c): 
 # All Rights Reserved.
 #
 # This program is copyright property of the author mentioned above.
@@ -303,7 +303,7 @@ class pos_session(models.Model):
     @api.multi
     def get_company_data_x(self):
         return self.user_id.company_id
-    
+
     @api.multi
     def get_current_date_x(self):
         if self._context and self._context.get('tz'):
@@ -316,7 +316,7 @@ class pos_session(models.Model):
             return c_time.strftime('%d/%m/%Y')
         else:
             return date.today().strftime('%d/%m/%Y')
-    
+
     @api.multi
     def get_session_date_x(self, date_time):
         if date_time:
@@ -352,7 +352,7 @@ class pos_session(models.Model):
             return c_time.strftime('%I:%M %p')
         else:
             return datetime.now().strftime('%I:%M:%S %p')
-    
+
     @api.multi
     def get_session_time_x(self, date_time):
         if date_time:
@@ -375,7 +375,7 @@ class pos_session(models.Model):
             else:
                 date_time = datetime.strptime(str(date_time), DEFAULT_SERVER_DATETIME_FORMAT)
             return date_time.strftime('%I:%M:%S %p')
-    
+
     @api.multi
     def get_total_sales_x(self):
         total_price = 0.0
@@ -384,7 +384,7 @@ class pos_session(models.Model):
                     for line in order.lines:
                             total_price += (line.qty * line.price_unit)
         return total_price
-    
+
     @api.multi
     def get_total_returns_x(self):
         pos_order_obj = self.env['pos.order']
@@ -410,7 +410,7 @@ class pos_session(models.Model):
             for order in self.order_ids:
                 total_discount += sum([((line.qty * line.price_unit) * line.discount) / 100 for line in order.lines])
         return total_discount
-    
+
     @api.multi
     def get_total_first_x(self):
         global gross_total
@@ -418,7 +418,7 @@ class pos_session(models.Model):
             gross_total = (self.get_total_sales() + self.get_total_tax()) \
                  + self.get_total_discount()
         return gross_total
-    
+
     @api.multi
     def get_user_x(self):
         if self._uid == SUPERUSER_ID:

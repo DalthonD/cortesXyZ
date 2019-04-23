@@ -72,7 +72,7 @@
 										POS #
 									</td>
 									<td class="text-right">
-										<span t-esc="o.config_id"/>
+										<span t-esc="o.config_id"/>---<span t-esc="o.display_name"/>
 									</td>
 								</tr>
 								<tr>
@@ -120,7 +120,7 @@
               <table style="width:100%;margin-top:15px;">
                 <tr>
                   <td class="text-left">
-                    FACTURAS: 0-0
+                    FACTURAS: <span t-esc=""/>
                   </td>
                 </tr>
                 <tr>
