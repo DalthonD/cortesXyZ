@@ -527,7 +527,7 @@ class pos_session(models.Model):
     def get_invoice_range_no_contr(self):
         fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','False']).id
         #Facturas de contribuyentes
-        pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)],order='asc').recibo_number
+        pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)],order='recibo_number asc').recibo_number
         if pos_order_recibos:
             fac_in = pos_order_recibos[0]
             fac_fin = pos_order_recibos[-1]
