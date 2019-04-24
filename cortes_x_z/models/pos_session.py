@@ -528,11 +528,12 @@ class pos_session(models.Model):
         fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','False']).id
         #Facturas de contribuyentes
         pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)],order='asc').recibo_number
-        fac_in = 0
-        fac_fin = 0
         if pos_order_recibos:
             fac_in = pos_order_recibos[0]
             fac_fin = pos_order_recibos[-1]
+        else:
+            fac_in = 0
+            fac_fin = 0
         invran = "{0}--{1}".format(fac_in,fac_fin)
         return invran
 
@@ -576,12 +577,13 @@ class pos_session(models.Model):
         fiscal_position_ccf_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','True']).id
         #Facturas de contribuyentes
         pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)],order='asc').recibo_number
-        fac_in = 0
-        fac_fin = 0
         if pos_order_recibos:
             fac_in = pos_order_recibos[0]
             fac_fin = pos_order_recibos[-1]
-        invran = "{0} -- {1}".format(fac_in,fac_fin)
+        else:
+            fac_in = 0
+            fac_fin = 0
+        invran = "{0}--{1}".format(fac_in,fac_fin)
         return invran
 
     @api.multi
@@ -623,11 +625,12 @@ class pos_session(models.Model):
     def get_ticket_range(self):
         #No. Tickets
         pos_order_tickets = self.env["pos.order"].search([('invoice_group','=','False'),('session_id','=',self.id)],order='asc').ticket_number
-        ticket_in = 0
-        ticket_fin = 0
         if pos_order_tickets:
             ticket_in = pos_order_tickets[0]
             ticket_fin = pos_order_tickets[-1]
+        else:
+            ticket_in = 0
+            ticket_fin = 0
         ticketsran = "{0} -- {1}".format(ticket_in,ticket_fin)
         return ticketsran
 
