@@ -38,7 +38,7 @@
                         </div>
                       </div>
                       --------------------------------------------------------
-                          <strong>REPORTE Z</strong>
+                          <strong>REPORTE Z</strong><br/>
                       --------------------------------------------------------
                         <table style="width:100%;margin-top:15px;">
                             <tr>
@@ -99,6 +99,22 @@
                                 <span t-esc="o.user_id.name"/>
                               </td>
                             </tr>
+                            <tr>
+                            <td class="text-left">
+                              FACTURAS:
+                            </td>
+                            <td class="text-left">
+                              <span t-esc="o.get_invoice_range_no_contr()"/>
+                            </td>
+                          </tr>
+                          <tr>
+                           <td class="text-left">
+                             TIQUETE:
+                           </td>
+                           <td class="text-left">
+                             <span t-esc="o.get_ticket_range()"/>
+                           </td>
+                         </tr>
                         </table>
                         --------------------------------------------------------
 
