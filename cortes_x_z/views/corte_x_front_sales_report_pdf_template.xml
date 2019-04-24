@@ -5,10 +5,10 @@
       <t t-call="web.html_container">
         <t t-call="web.basic_layout">
           <div class="page">
-            <div align="center" style="border:1px solid black;margin:0 auto;padding:0 auto;font-size:25px">
-              <strong>REPORTE X</strong>
-            </div>
             <t t-foreach="docs" t-as="o">
+              <div align="center" style="border:1px solid black;margin:0 auto;padding:0 auto;font-size:25px">
+                <strong>REPORTE X</strong>
+              </div>
                 <div align="center" style="margin:0 auto;padding:0 auto;font-size:20px;margin-top:8px;">
                   <div style="font-size:13px;">
                     <t t-if="o.get_company_data_x().name">
@@ -120,7 +120,10 @@
                 <table style="width:100%;margin-top:15px;">
                   <tr>
                     <td class="text-left">
-                      FACTURAS: <span t-esc="o.get_invoice_range_no_contr()"/>
+                      FACTURAS:
+                    </td>
+                    <td class="text-left">
+                      <span t-esc="o.get_invoice_range_no_contr()"/>
                     </td>
                   </tr>
                   <tr>
@@ -165,7 +168,10 @@
                 <table style="width:100%;margin-top:15px;">
                   <tr>
                     <td class="text-left">
-                      CCF: <span t-esc="o.get_invoice_range_ccf()"/>
+                      CCF:
+                    </td>
+                    <td class="text-left">
+                      <span t-esc="o.get_invoice_range_ccf()"/>
                     </td>
                   </tr>
                   <tr>
@@ -210,7 +216,10 @@
                 <table style="width:100%;margin-top:15px;">
                   <tr>
                     <td class="text-left">
-                      TIQUETE: <span t-esc="o.get_ticket_range()"/>
+                      TIQUETE:
+                    </td>
+                    <td class="text-left">
+                      <span t-esc="o.get_ticket_range()"/>
                     </td>
                   </tr>
                   <tr>
