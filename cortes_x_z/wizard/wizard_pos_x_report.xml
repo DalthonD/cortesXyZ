@@ -15,8 +15,8 @@
                         <field name="report_type" required="1"/>
                     </group>
                     <group attrs="{'invisible':[('report_type' ,'!=','thermal')]}">
-                        <field name="proxy_ip" 
-                               placeholder="http://1.1.1.1:8069" 
+                        <field name="proxy_ip"
+                               placeholder="http://1.1.1.1:8069"
                                attrs="{'required':[('report_type' ,'=','thermal')]}"/>
                     </group>
                     <footer>
@@ -27,6 +27,18 @@
                 </form>
             </field>
         </record>
+
+        <record id="action_wizard_pos_x_report" model="ir.actions.act_window">
+            <field name="name">X Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.pos.x.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_wizard_pos_x_report" id="menu_print_x_report"
+                  name="Reporte X" parent="menu_main_print_pos_sale_report" sequence='1'/>
 
     </data>
 </odoo>

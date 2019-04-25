@@ -15,6 +15,8 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import pytz
 from pytz import timezone
 from datetime import datetime, date, timedelta
+from odoo.exceptions import UserError, ValidationError
+from odoo import exceptions
 _logger = logging.getLogger(__name__)
 
 
@@ -525,19 +527,32 @@ class pos_session(models.Model):
     #############FACTURA#############
     @api.multi
     def get_invoice_range_no_contr(self):
-        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','False']).id
+        fiscal_position_no_contri_ids = []
+        fiscal_position_no_contri_obj = self.env['account.fiscal.position']
+        fiscal_position_no_contri_obj = fiscal_position_no_contri_obj.filtered(lambda id: fiscal_position_no_contri_obj.sv_contribuyente != True )
+        while fiscal_position_no_contri_obj:
+            fiscal_position_no_contri_ids = fiscal_position_no_contri_obj.id
         #Facturas de contribuyentes
-        #pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)],order='recibo_number asc')
         pos_order_recibos = []
-        pos_order_obj = self.env["pos.order"].search([('invoice_id','!=',''),('session_id','=',self.id)],order='recibo_number asc')
-        if pos_order_obj and fiscal_position_ids:
-            pos_order_recibos = [pos_order_obj.recibo_number for pos_order_obj.fiscal_position_id in fiscal_position_no_contri_ids]
+        pos_order_obj = self.env['pos.order'].search([('invoice_id','!=', False),('session_id','=', self.id)],order='invoice_id asc')
+        ####hasta aqui todo bien
+        if pos_order_obj and fiscal_position_no_contri_ids:
+            for pos_order_obj.fiscal_position_id in fiscal_position_no_contri_ids:
+                pos_order_recibos.append(pos_order_obj.invoice_id.number)
+            if pos_order_recibos >=2:
+                fac_in = pos_order_recibos[0]
+                fac_fin = pos_order_recibos[-1]
+            else:
+                fac_in = pos_order_recibos[0]
+                fac_fin = "(Único registro)"
+            invran = "{0}-{1}".format(fac_in,fac_fin)
+            return invran
         else:
             pos_order_recibos = [0,0]
-        fac_in = pos_order_recibos[0]
-        fac_fin = pos_order_recibos[-1]
-        invran = "{0}--{1}".format(fac_in,fac_fin)
-        return invran
+            fac_in = pos_order_recibos[0]
+            fac_fin = pos_order_recibos[-1]
+            invran = "{0}-{1}".format(fac_in,fac_fin)
+            return invran
 
     @api.multi
     def get_total_sales_invoice_gravado_no_contr(self):
@@ -626,27 +641,43 @@ class pos_session(models.Model):
     #############TIQUETE#############
     @api.multi
     def get_ticket_range(self):
-        #No. Tickets
-        pos_order_tickets = self.env["pos.order"].search([('invoice_group','=','False'),('session_id','=',self.id)],order='asc').ticket_number
-        if pos_order_tickets:
-            ticket_in = pos_order_tickets[0]
-            ticket_fin = pos_order_tickets[-1]
+        if self:
+            for record in self:
+                pos_order_tickets = []
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
+                for order in pos_order_obj:
+                    pos_order_tickets.append(order.ticket_number)
+                if len(pos_order_tickets)>1:
+                    tckt_in = pos_order_tickets[0]
+                    tckt_fin = pos_order_tickets[-1]
+                elif len(pos_order_tickets)==1:
+                    tckt_in = pos_order_tickets[0]
+                    tckt_fin = "(Registro único)"
+                else:
+                    return 'No ventas registradas aún'
+                tcktran =  '{0}-{1}'.format(tckt_in,tckt_fin)
+                return tcktran
         else:
-            ticket_in = 0
-            ticket_fin = 0
-        ticketsran = "{0} -- {1}".format(ticket_in,ticket_fin)
-        return ticketsran
+            tcktran = '0-0'
+            return tcktran
 
     @api.multi
     def get_total_sales_ticket_gravado(self):
         total_price = 0.0
-        fiscal_position_ids = self.env["account.fiscal.position"].search(['sv_clase','=','Gravado']).id
-        #Tickets Gravadas
-        pos_order_tickets_obj = self.env["pos.order"].search([('invoice_group','=','False'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ids)])
-        if pos_order_tickets_obj:
-            for order in pos_order_tickets_obj:
-                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-        return total_price
+        if self:
+            for record in self:
+                #fiscal_position_no_contri_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','Gravado')]).id
+                default_fiscal_position_id = record.config_id.default_fiscal_position_id
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
+                if pos_order_obj and default_fiscal_position_id:
+                    for order in pos_order_obj:
+                        if order.config_id.default_fiscal_position_id == default_fiscal_position_id:
+                            total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+                else:
+                    raise UserError(_("!FALTA POSICION FISCAL POR DEFECTO EN PoS. Sesión: %s!"), % record.name)
+                return total_price
+        else:
+            return total_price
 
     @api.multi
     def get_total_sales_ticket_exento(self):
