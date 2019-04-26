@@ -673,8 +673,6 @@ class pos_session(models.Model):
                     for order in pos_order_obj:
                         if order.config_id.default_fiscal_position_id == default_fiscal_position_id:
                             total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-                else:
-                    raise UserError(_("!FALTA POSICION FISCAL POR DEFECTO EN PoS. Sesión: %s!",record.name))
                 return total_price
         else:
             return total_price
