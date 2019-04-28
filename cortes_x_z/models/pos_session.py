@@ -527,228 +527,85 @@ class pos_session(models.Model):
     #############FACTURA#############
     @api.multi
     def get_invoice_range_no_contr(self):
-        fiscal_position_no_contri_ids = []
-        fiscal_position_no_contri_obj = self.env['account.fiscal.position']
-        fiscal_position_no_contri_obj = fiscal_position_no_contri_obj.filtered(lambda id: fiscal_position_no_contri_obj.sv_contribuyente != True )
-        while fiscal_position_no_contri_obj:
-            fiscal_position_no_contri_ids = fiscal_position_no_contri_obj.id
-        #Facturas de contribuyentes
-        pos_order_recibos = []
-        pos_order_obj = self.env['pos.order'].search([('invoice_id','!=', False),('session_id','=', self.id)],order='invoice_id asc')
-        ####hasta aqui todo bien
-        if pos_order_obj and fiscal_position_no_contri_ids:
-            for pos_order_obj.fiscal_position_id in fiscal_position_no_contri_ids:
-                pos_order_recibos.append(pos_order_obj.invoice_id.number)
-            if pos_order_recibos >=2:
-                fac_in = pos_order_recibos[0]
-                fac_fin = pos_order_recibos[-1]
-            else:
-                fac_in = pos_order_recibos[0]
-                fac_fin = "(Único registro)"
-            invran = "{0}-{1}".format(fac_in,fac_fin)
-            return invran
-        else:
-            pos_order_recibos = [0,0]
-            fac_in = pos_order_recibos[0]
-            fac_fin = pos_order_recibos[-1]
-            invran = "{0}-{1}".format(fac_in,fac_fin)
-            return invran
+        invran = '0-0'
+        if self and self.order_ids:
+            for record in self:
+                pos_order_obj = []
+                pos_invoice_obj = []
+                fiscal_position_ids = self.env['account.fiscal.position'].seach([('sv_cotribuyente','=',False)])
+                if len(fiscal_position_ids)>1:
+                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)])
+                else len(fiscal_position_ids)==1:
+                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)])
+        return invran
 
     @api.multi
     def get_total_sales_invoice_gravado_no_contr(self):
         total_price = 0.0
-        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','False'),('sv_clase','=','Gravado')]).id
-        #Facturas de contribuyentes Gravadas
-        pos_order_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id)])
-        if pos_order_obj and fiscal_position_no_contri_ids:
-            pos_order_obj = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
-            for order in pos_order_recibos_obj:
-                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
         return total_price
 
     @api.multi
     def get_total_sales_invoice_exento_no_contr(self):
         total_price = 0.0
-        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','False'),('sv_clase','=','Exento')]).id
-        #Facturas de contribuyentes Exentas
-        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)])
-        if pos_order_recibos:
-            for order in pos_order_recibos_obj:
-                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
         return total_price
 
     @api.multi
     def get_total_sales_invoice_no_aplica_no_contr(self):
         total_price = 0.0
-        fiscal_position_no_contri_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','False'),('sv_clase','=','No Aplica')]).id
-        #Facturas de contribuyentes No Sujetas
-        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_no_contri_ids)])
-        if pos_order_recibos:
-            for order in pos_order_recibos_obj:
-                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
         return total_price
     #############################
 
     #############CCF#############
     @api.multi
     def get_invoice_range_ccf(self):
-        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search(['sv_contribuyente','=','True']).id
-        #Facturas de contribuyentes
-        pos_order_recibos = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)],order='asc').recibo_number
-        if pos_order_recibos:
-            fac_in = pos_order_recibos[0]
-            fac_fin = pos_order_recibos[-1]
-        else:
-            fac_in = 0
-            fac_fin = 0
-        invran = "{0}--{1}".format(fac_in,fac_fin)
-        return invran
+        return '0-0'
 
     @api.multi
     def get_total_sales_invoice_gravado_ccf(self):
         total_price = 0.0
-        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','True'),('sv_clase','=','Gravado')]).id
-        #Facturas de contribuyentes Gravadas
-        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)])
-        if pos_order_recibos:
-            for order in pos_order_recibos_obj:
-                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
         return total_price
 
     @api.multi
     def get_total_sales_invoice_exento_ccf(self):
         total_price = 0.0
-        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','True'),('sv_clase','=','Exento')]).id
-        #Facturas de contribuyentes Exentas
-        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)])
-        if pos_order_recibos:
-            for order in pos_order_recibos_obj:
-                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
         return total_price
 
     @api.multi
     def get_total_sales_invoice_no_aplica_ccf(self):
         total_price = 0.0
-        fiscal_position_ccf_ids = self.env["account.fiscal.position"].search([('sv_contribuyente','=','True'),('sv_clase','=','No Aplica')]).id
-        #Facturas de contribuyentes No Sujetas
-        pos_order_recibos_obj = self.env["pos.order"].search([('invoice_group','=','True'),('session_id','=',self.id),('fiscal_position_id','=',fiscal_position_ccf_ids)])
-        if pos_order_recibos:
-            for order in pos_order_recibos_obj:
-                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
         return total_price
     ############################
 
     #############TIQUETE#############
     @api.multi
     def get_ticket_range(self):
-        if self:
-            for record in self:
-                pos_order_tickets = []
-                pos_order_obj = record.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
-                for order in pos_order_obj:
-                    pos_order_tickets.append(order.ticket_number)
-                if len(pos_order_tickets)>1:
-                    tckt_in = pos_order_tickets[0]
-                    tckt_fin = pos_order_tickets[-1]
-                elif len(pos_order_tickets)==1:
-                    tckt_in = pos_order_tickets[0]
-                    tckt_fin = "(Registro único)"
-                else:
-                    return 'No ventas registradas aún'
-                tcktran =  '{0}-{1}'.format(tckt_in,tckt_fin)
-                return tcktran
-        else:
-            tcktran = '0-0'
-            return tcktran
+        tcktran = '0-0'
+        return tcktran
 
     @api.multi
     def get_total_sales_ticket_gravado(self):
         total_price = 0.0
-        if self:
-            for record in self:
-                #fiscal_position_no_contri_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','Gravado')]).id
-                default_fiscal_position_id = record.config_id.default_fiscal_position_id
-                pos_order_obj = record.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
-                if pos_order_obj and default_fiscal_position_id:
-                    for order in pos_order_obj:
-                        if order.config_id.default_fiscal_position_id == default_fiscal_position_id:
-                            total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-                return total_price
-        else:
-            return total_price
+        return total_price
 
     @api.multi
     def get_total_sales_ticket_exento(self):
         total_price = 0.0
-        if self:
-            for record in self:
-                exento_fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_clase','=','Exento')])
-                pos_order_obj = record.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
-                if pos_order_obj:
-                    if len(exento_fiscal_position_ids)>1:
-                        pos_order_obj = [pos_order_obj for pos_order_obj.fiscal_position_id in exento_fiscal_position_ids]
-                        for order in pos_order_obj:
-                            total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-                    elif exento_fiscal_position_ids==1:
-                        for order in pos_order_obj:
-                            if order.config_id.default_fiscal_position_id == exento_fiscal_position_ids:
-                                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-                    else:
-                        raise UserError(_("!NO EXISTE POSICION(es) FISCAL(es) DE EXENTO(s) EN PoS. Sesión: %s!", record.name))
-                else:
-                    return total_price
-        else:
-            return total_price
+        return total_price
 
     @api.multi
     def get_total_sales_ticket_no_aplica(self):
         total_price = 0.0
-        if self:
-            for record in self:
-                aplica_fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_clase','=','No Aplica')])
-                pos_order_obj = record.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
-                if pos_order_obj:
-                    if len(exento_fiscal_position_ids)>1:
-                        pos_order_obj = [pos_order_obj for pos_order_obj.fiscal_position_id in aplica_fiscal_position_ids]
-                        for order in pos_order_obj:
-                            total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-                    elif exento_fiscal_position_ids==1:
-                        for order in pos_order_obj:
-                            if order.config_id.default_fiscal_position_id == aplica_fiscal_position_ids:
-                                total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-                    else:
-                        raise UserError(_("!NO EXISTE POSICION(es) FISCAL(es) DE NO SUJETO(s) EN PoS. Sesión: %s!", record.name))
-                else:
-                    return total_price
-        else:
-            return total_price
+        return total_price
 
     @api.multi
     def get_total_sales_tickets(self):
         total_price = 0.0
-        if self:
-            for record in self:
-                pos_order_obj = record.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
-                if pos_order_obj:
-                    for order in pos_order_obj:
-                        total_price += sum([(line.qty * line.price_unit) for line in order.lines])
-                return total_price
-        else:
-            return total_price
+        return total_price
 
     @api.multi
     def get_total_returns_tickets_x(self):
         total_return = 0.0
-        if self:
-            for record in self:
-                pos_order_obj = record.env['pos.order'].search([('invoice_id','=', False),('session_id','=', record.id)], order='recibo_number asc')
-                if pos_order_obj:
-                    for order in pos_order_obj:
-                        if order.amount_total < 0:
-                            total_return += abs(order.amount_total)
-                return total_return
-        else:
-            return total_return
+        return total_return
 
     ############################
 

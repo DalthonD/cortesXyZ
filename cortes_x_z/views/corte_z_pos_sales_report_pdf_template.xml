@@ -290,7 +290,6 @@
                   </table><br/>
                 </tbody>
                 <tfoot>
-
                   <div style="font-size:13px;">
                     <t t-if="o.get_company_data_x().name">
                       <t t-esc="o.get_company_data_x().name"/><br/>
@@ -317,7 +316,6 @@
           </div>
         </t>
       </t>
-    </t>
-  </template>
-</data>
+    </template>
+  </data>
 </odoo>
