@@ -736,22 +736,87 @@ class pos_session(models.Model):
     @api.multi
     def get_ticket_range(self):
         tcktran = '0-0'
+        if self:
+            for record in self:
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                if len(pos_order_obj)>1:
+                    tckt_in = pos_order_obj[0]
+                    tckt_fin = pos_order_obj[-1]
+                elif len(pos_order_obj)==1:
+                    tckt_in = pos_order_obj[0]
+                    tckt_fin = '(único)'
+                else:
+                    inv_in = 0
+                    inv_fin = 0
+                invran = '{0}-{1}'.format(tckt_in,tckt_fin)
+                return tcktran
         return tcktran
 
     @api.multi
     def get_total_sales_ticket_gravado(self):
         total_price = 0.0
-        return total_price
+        if self:
+            for record in self:
+                pos_order_obj = []
+                orders = []
+                #fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','Gravado')])
+                default_fiscal_position_id = record.config_id.default_fiscal_position_id
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                if pos_order_obj:
+                    for order in pos_order_obj:
+                        if order.fiscal_position_id == default_fiscal_position_id:
+                            orders.append(order)
+                else:
+                    return total_price
+                for order in orders:
+                    total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+                return total_price
+        else:
+            return total_price
 
     @api.multi
     def get_total_sales_ticket_exento(self):
         total_price = 0.0
-        return total_price
+        if self:
+            for record in self:
+                pos_order_obj = []
+                orders = []
+                fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','Exento')])
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('invoice_id.reference','!=',False)], order='ticket_number asc')
+                if len(fiscal_position_ids)>1 and pos_order_obj:
+                    orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
+                elif len(fiscal_position_ids)==1 and pos_order_obj:
+                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
+                        orders.append(pos_order_obj)
+                else:
+                    return total_price
+                for order in orders:
+                    total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+                return total_price
+        else:
+            return total_price
 
     @api.multi
     def get_total_sales_ticket_no_aplica(self):
         total_price = 0.0
-        return total_price
+        if self:
+            for record in self:
+                pos_order_obj = []
+                orders = []
+                fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','No Aplica')])
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                if len(fiscal_position_ids)>1 and pos_order_obj:
+                    orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
+                elif len(fiscal_position_ids)==1 and pos_order_obj:
+                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
+                        orders.append(pos_order_obj)
+                else:
+                    return total_price
+                for order in orders:
+                    total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+                return total_price
+        else:
+            return total_price
 
     @api.multi
     def get_total_sales_tickets(self):
@@ -772,7 +837,7 @@ class pos_session(models.Model):
         total_return = 0.0
         if self:
             for record in self:
-                for order in self.env['pos.order'].search([('session_id', '=', self.id),('invoice_id','=',False)]):
+                for order in self.env['pos.order'].search([('session_id', '=', record.id),('invoice_id','=',False)]):
                     if order.amount_total < 0:
                         total_return += abs(order.amount_total)
         return total_return
