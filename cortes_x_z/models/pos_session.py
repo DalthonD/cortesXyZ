@@ -712,7 +712,6 @@ class pos_session(models.Model):
     @api.multi
     def get_total_sales_invoice_no_aplica_ccf(self):
         total_price = 0.0
-        return total_price
         if self:
             for record in self:
                 pos_order_obj = []
