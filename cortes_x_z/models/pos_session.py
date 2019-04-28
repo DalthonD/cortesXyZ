@@ -540,6 +540,7 @@ class pos_session(models.Model):
                 elif len(fiscal_position_ids)==1 and pos_invoice_obj:
                     pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
                 else:
+                    invran = '1-2'
                     return invran
                 for order in pos_order_obj:
                     for invoice in pos_invoice_obj:
@@ -552,8 +553,8 @@ class pos_session(models.Model):
                     inv_in = invoices[0]
                     inv_fin = '(único)'
                 else:
-                    inv_in = 1
-                    inv_fin = 2
+                    inv_in = 3
+                    inv_fin = 4
                 invran = '{0}-{1}'.format(inv_in,inv_fin)
                 return invran
         else:
