@@ -746,9 +746,9 @@ class pos_session(models.Model):
                     tckt_in = pos_order_obj[0]
                     tckt_fin = '(único)'
                 else:
-                    inv_in = 0
-                    inv_fin = 0
-                invran = '{0}-{1}'.format(tckt_in,tckt_fin)
+                    tckt_in = 0
+                    tckt_fin = 0
+                tcktran = '{0}-{1}'.format(tckt_in,tckt_fin)
                 return tcktran
         return tcktran
 
