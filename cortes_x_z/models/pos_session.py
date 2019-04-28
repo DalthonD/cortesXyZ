@@ -528,16 +528,36 @@ class pos_session(models.Model):
     @api.multi
     def get_invoice_range_no_contr(self):
         invran = '0-0'
-        if self and self.order_ids:
+        if self:
             for record in self:
                 pos_order_obj = []
                 pos_invoice_obj = []
-                fiscal_position_ids = self.env['account.fiscal.position'].seach([('sv_cotribuyente','=',False)])
-                if len(fiscal_position_ids)>1:
-                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)])
-                else len(fiscal_position_ids)==1:
-                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)])
-        return invran
+                invoices = []
+                fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False)])
+                pos_invoice_obj = self.env['account.invoice'].search([('reference','!=',False)], order='reference asc')
+                if len(fiscal_position_ids)>1 and pos_invoice_obj:
+                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)], order='invoice_id asc')
+                elif len(fiscal_position_ids)==1 and pos_invoice_obj:
+                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
+                else:
+                    return invran
+                for order in pos_order_obj:
+                    for invoice in pos_invoice_obj:
+                        if order.invoice_id == invoice.id:
+                            invoices.append(invoice.reference)
+                if len(invoices)>1:
+                    inv_in = invoices[0]
+                    inv_fin = invoices[-1]
+                elif len(invoices)==1:
+                    inv_in = invoices[0]
+                    inv_fin = '(único)'
+                else:
+                    inv_in = 1
+                    inv_fin = 2
+                invran = '{0}-{1}'.format(inv_in,inv_fin)
+                return invran
+        else:
+            return invran
 
     @api.multi
     def get_total_sales_invoice_gravado_no_contr(self):
