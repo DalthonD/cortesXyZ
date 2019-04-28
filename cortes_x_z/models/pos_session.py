@@ -756,11 +756,25 @@ class pos_session(models.Model):
     @api.multi
     def get_total_sales_tickets(self):
         total_price = 0.0
+        if self:
+            for record in self:
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                if pos_order_obj:
+                    for order in pos_order_obj:
+                        total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+                    return total_price
+                else:
+                    return total_price
         return total_price
 
     @api.multi
     def get_total_returns_tickets_x(self):
         total_return = 0.0
+        if self:
+            for record in self:
+                for order in self.env['pos.order'].search([('session_id', '=', self.id),('invoice_id','=',False)]):
+                    if order.amount_total < 0:
+                        total_return += abs(order.amount_total)
         return total_return
 
     ############################
