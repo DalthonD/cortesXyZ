@@ -536,9 +536,9 @@ class pos_session(models.Model):
                 fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False)])
                 pos_invoice_obj = self.env['account.invoice'].search([('reference','!=',False)], order='reference asc')
                 if len(fiscal_position_ids)>1 and pos_invoice_obj:
-                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)], order='invoice_id asc')
+                    pos_order_obj = self.env['pos.order'].search([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)], order='invoice_id asc')
                 elif len(fiscal_position_ids)==1 and pos_invoice_obj:
-                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
+                    pos_order_obj = self.env['pos.order'].search([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
                 else:
                     return invran
                 for order in pos_order_obj:
@@ -562,7 +562,26 @@ class pos_session(models.Model):
     @api.multi
     def get_total_sales_invoice_gravado_no_contr(self):
         total_price = 0.0
-        return total_price
+        if self:
+            for record in self:
+                total_price = 1.0
+                pos_order_obj = []
+                orders = []
+                fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','Gravado')])
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','!=',False),('session_id','=',record.id),('invoice_id.reference','!=',False)], order='invoice_id asc')
+                if len(fiscal_position_ids)>1 and pos_order_obj:
+                    orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
+                elif len(fiscal_position_ids)==1 pos_order_obj:
+                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
+                        orders.append(pos_order_obj)
+                else:
+                    return total_price
+                total_price = 2.0
+                for order in orders:
+                    total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+                return total_price
+        else:
+            return total_price
 
     @api.multi
     def get_total_sales_invoice_exento_no_contr(self):
@@ -587,9 +606,9 @@ class pos_session(models.Model):
                 fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',True)])
                 pos_invoice_obj = self.env['account.invoice'].search([('reference','!=',False)], order='reference asc')
                 if len(fiscal_position_ids)>1 and pos_invoice_obj:
-                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)], order='invoice_id asc')
+                    pos_order_obj = self.env['pos.order'].search([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)], order='invoice_id asc')
                 elif len(fiscal_position_ids)==1 and pos_invoice_obj:
-                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
+                    pos_order_obj = self.env['pos.order'].search([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
                 else:
                     return invran
                 for order in pos_order_obj:
