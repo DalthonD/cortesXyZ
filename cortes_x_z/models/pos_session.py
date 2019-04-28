@@ -540,7 +540,6 @@ class pos_session(models.Model):
                 elif len(fiscal_position_ids)==1 and pos_invoice_obj:
                     pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
                 else:
-                    invran = '1-2'
                     return invran
                 for order in pos_order_obj:
                     for invoice in pos_invoice_obj:
@@ -553,8 +552,8 @@ class pos_session(models.Model):
                     inv_in = invoices[0]
                     inv_fin = '(único)'
                 else:
-                    inv_in = 3
-                    inv_fin = 4
+                    inv_in = 0
+                    inv_fin = 0
                 invran = '{0}-{1}'.format(inv_in,inv_fin)
                 return invran
         else:
@@ -579,7 +578,37 @@ class pos_session(models.Model):
     #############CCF#############
     @api.multi
     def get_invoice_range_ccf(self):
-        return '0-0'
+        invran = '0-0'
+        if self:
+            for record in self:
+                pos_order_obj = []
+                pos_invoice_obj = []
+                invoices = []
+                fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',True)])
+                pos_invoice_obj = self.env['account.invoice'].search([('reference','!=',False)], order='reference asc')
+                if len(fiscal_position_ids)>1 and pos_invoice_obj:
+                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','in',fiscal_position_ids)], order='invoice_id asc')
+                elif len(fiscal_position_ids)==1 and pos_invoice_obj:
+                    pos_order_obj = self.env['pos.order'].serach([('invoice_id','!=',False),('session_id','=',record.id),('fiscal_position_id','=',fiscal_position_ids)], order='invoice_id asc')
+                else:
+                    return invran
+                for order in pos_order_obj:
+                    for invoice in pos_invoice_obj:
+                        if order.invoice_id == invoice.id:
+                            invoices.append(invoice.reference)
+                if len(invoices)>1:
+                    inv_in = invoices[0]
+                    inv_fin = invoices[-1]
+                elif len(invoices)==1:
+                    inv_in = invoices[0]
+                    inv_fin = '(único)'
+                else:
+                    inv_in = 0
+                    inv_fin = 0
+                invran = '{0}-{1}'.format(inv_in,inv_fin)
+                return invran
+        else:
+            return invran
 
     @api.multi
     def get_total_sales_invoice_gravado_ccf(self):
