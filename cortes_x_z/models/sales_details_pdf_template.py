@@ -31,7 +31,8 @@ class front_sales_report_pdf_template(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        report = self.env['ir.actions.report']._get_report_from_name('cortes_x_z.front_sales_report_x_pdf_template')
+        report = self.env['ir.actions.report'].\
+            _get_report_from_name('cortes_x_z.front_sales_report_x_pdf_template')
         if data and data.get('form') and data.get('form').get('session_ids'):
             docids = self.env['pos.session'].browse(data['form']['session_ids'])
         return {'doc_ids': self.env['wizard.pos.x.report'].browse(data['ids']),
