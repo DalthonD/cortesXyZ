@@ -269,10 +269,10 @@ class pos_session(models.Model):
             min_tz = int(str(c_time)[-5:][3:])
             sign = str(c_time)[-6][:1]
             if sign == '+':
-                date_time = datetime.strptime(date_time, DEFAULT_SERVER_DATETIME_FORMAT) + \
+                date_time = datetime.strptime(str(date_time), DEFAULT_SERVER_DATETIME_FORMAT) + \
                                                     timedelta(hours=hour_tz, minutes=min_tz)
             else:
-                date_time = datetime.strptime(date_time, DEFAULT_SERVER_DATETIME_FORMAT) - \
+                date_time = datetime.strptime(str(date_time), DEFAULT_SERVER_DATETIME_FORMAT) - \
                                                     timedelta(hours=hour_tz, minutes=min_tz)
             return date_time.strftime('%I:%M:%S %p')
 
