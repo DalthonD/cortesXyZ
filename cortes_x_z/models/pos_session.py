@@ -255,7 +255,7 @@ class pos_session(models.Model):
             else:
                 date_time = datetime.strptime(str(date_time), DEFAULT_SERVER_DATETIME_FORMAT) - \
                                                     timedelta(hours=hour_tz, minutes=min_tz)
-            return date_time.strftime('%d/%m/%Y %I:%M:%S %p')
+            return date_time.strftime('%d/%m/%Y')
 
     @api.multi
     def get_session_time(self, date_time):
