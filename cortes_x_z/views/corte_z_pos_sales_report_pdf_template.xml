@@ -49,6 +49,7 @@
                       </td>
                       <td class="text-right">
                         <span t-esc="o.get_session_date(o.start_at)"/>
+                        <span t-esc="o.get_session_time(o.start_at)"/>
                       </td>
                     </tr>
                     <tr>
