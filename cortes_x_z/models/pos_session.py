@@ -738,7 +738,7 @@ class pos_session(models.Model):
         tcktran = '0-0'
         if self:
             for record in self:
-                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('recibo_number','=',False),('ticket_number','!=',False)], order='ticket_number asc')
                 if len(pos_order_obj)>1:
                     tckt_in = pos_order_obj[0]
                     tckt_fin = pos_order_obj[-1]
@@ -761,7 +761,7 @@ class pos_session(models.Model):
                 orders = []
                 #fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','Gravado')])
                 default_fiscal_position_id = record.config_id.default_fiscal_position_id
-                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('recibo_number','=',False),('ticket_number','!=',False)], order='ticket_number asc')
                 if pos_order_obj:
                     for order in pos_order_obj:
                         if order.fiscal_position_id == default_fiscal_position_id:
@@ -782,7 +782,7 @@ class pos_session(models.Model):
                 pos_order_obj = []
                 orders = []
                 fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','Exento')])
-                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('invoice_id.reference','!=',False)], order='ticket_number asc')
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('recibo_number','=',False),('ticket_number','!=',False)], order='ticket_number asc')
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
@@ -804,7 +804,7 @@ class pos_session(models.Model):
                 pos_order_obj = []
                 orders = []
                 fiscal_position_ids = self.env['account.fiscal.position'].search([('sv_contribuyente','=',False),('sv_clase','=','No Aplica')])
-                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('recibo_number','=',False),('ticket_number','!=',False)], order='ticket_number asc')
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
@@ -823,7 +823,7 @@ class pos_session(models.Model):
         total_price = 0.0
         if self:
             for record in self:
-                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id)], order='ticket_number asc')
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('recibo_number','=',False),('ticket_number','!=',False)], order='ticket_number asc')
                 if pos_order_obj:
                     for order in pos_order_obj:
                         total_price += sum([(line.qty * line.price_unit) for line in order.lines])
@@ -837,10 +837,48 @@ class pos_session(models.Model):
         total_return = 0.0
         if self:
             for record in self:
-                for order in self.env['pos.order'].search([('session_id', '=', record.id),('invoice_id','=',False)]):
+                for order in self.env['pos.order'].search([('session_id', '=', record.id),('invoice_id','=',False),('recibo_number','=',False),('ticket_number','!=',False)]):
                     if order.amount_total < 0:
                         total_return += abs(order.amount_total)
         return total_return
+
+    ############################
+
+    #############RECIBO WALLET#############
+    @api.multi
+    def get_wallet_reciept(self):
+        recran = '0-0'
+        if self:
+            for record in self:
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id), ('recibo_number','!=',False),('ticket_number','=',False)], order='recibo_number asc')
+                if len(pos_order_obj)>1:
+                    rec_in = pos_order_obj[0]
+                    rec_fin = pos_order_obj[-1]
+                elif len(pos_order_obj)==1:
+                    rec_in = pos_order_obj[0]
+                    rec_fin = '(único)'
+                else:
+                    rec_in = 0
+                    rec_fin = 0
+                recran = '{0}-{1}'.format(rec_in,rec_fin)
+                return recran
+        else:
+            return recran
+
+    @api.multi
+    def get_total_wallet_recharges(self):
+        total_price = 0.0
+        if self:
+            for record in self:
+                pos_order_obj = self.env['pos.order'].search([('invoice_id','=',False),('session_id','=',record.id),('recibo_number','!=',False),('ticket_number','=',False)], order='recibo_number asc')
+                if pos_order_obj:
+                    for order in pos_order_obj:
+                        total_price += sum([(line.qty * line.price_unit) for line in order.lines])
+                    return total_price
+                else:
+                    return total_price
+        return total_price
+
 
     ############################
 

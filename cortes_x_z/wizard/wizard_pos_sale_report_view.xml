@@ -29,7 +29,7 @@
         </record>
 
         <record id="action_wizard_pos_sale_report" model="ir.actions.act_window">
-            <field name="name">Z Report</field>
+            <field name="name">Reporte Z</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wizard.pos.sale.report</field>
             <field name="view_type">form</field>
