@@ -573,8 +573,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -595,8 +595,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -617,8 +617,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -677,8 +677,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -699,8 +699,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -721,8 +721,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -786,8 +786,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -808,8 +808,8 @@ class pos_session(models.Model):
                 if len(fiscal_position_ids)>1 and pos_order_obj:
                     orders = [pos_order_obj for pos_order_obj.fiscal_position_id in fiscal_position_ids]
                 elif len(fiscal_position_ids)==1 and pos_order_obj:
-                    if pos_order_obj.fiscal_position_id == fiscal_position_ids:
-                        orders.append(pos_order_obj)
+                    #orders = [pos_order_obj for pos_order_obj.fiscal_position_id == fiscal_position_ids]
+                    orders = list(map(lambda o: o.fiscal_position_id == fiscal_position_ids, pos_order_obj))
                 else:
                     return total_price
                 for order in orders:
@@ -878,7 +878,6 @@ class pos_session(models.Model):
                 else:
                     return total_price
         return total_price
-
 
     ############################
 

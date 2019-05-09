@@ -216,7 +216,7 @@
                         TOTAL VENTAS
                       </td>
                       <td class="text-right">
-                        <span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(o.get_total_sales_tickets())"/>
+                        <span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(o.get_total_sales_tickets())"/><!--Se debe sumar la devolucion para que cuadre porque viene alterada por las devoluciones-->
                       </td>
                     </tr>
                     <tr>
@@ -261,7 +261,7 @@
                         TOTAL
                       </td>
                       <td class="text-right">
-                        <t t-set="total3" t-value="o.get_total_sales_tickets() - o.get_total_returns_tickets_x()"/>
+                        <t t-set="total3" t-value="o.get_total_sales_tickets() - o.get_total_returns_tickets_x()"/><!-- el total de ventas regresa laterado por las devoluciones. No debe volverse a restar-->
                         <span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(total3)"/>
                       </td>
                     </tr>
