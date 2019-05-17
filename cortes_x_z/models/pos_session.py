@@ -524,6 +524,39 @@ class pos_session(models.Model):
             else:
                 return {}
 
+    @api.multi
+    def get_payments_invoice(self):
+        if self:
+            start_at = self.start_at
+            stop_at = datetime.now()
+            if self.stop_at:
+                stop_at = self.stop_at
+            account_payment_obj = self.env["account.payment"]
+            invoice_obj = self.env["account.invoice"]
+            #journal_obj = self.env["account.journal"]
+            company_id = self.env['res.users'].browse([self._uid]).company_id.id
+            inv_ids = invoice_obj.search([('create_date', '>=', start_at),
+                                            ('create_date', '<=', stop_at),
+                                            ('state', '=', 'paid'),
+                                            ('user_id', '=', self.user_id.id), ('company_id', '=', company_id)])
+            data = {}
+            if inv_ids:
+                inv_ids = [inv.partner_id.id for inv in inv_ids]
+                account_payment_ids = account_payment_obj.search([('partner_id', 'in', inv_ids),('create_date', '>=', start_at),
+                                                ('create_date', '<=', stop_at),
+                                                ('create_uid', '=', self.user_id.id), ('company_id', '=', company_id)])
+                if account_payment_ids:
+                    a_l = []
+                    for r in account_payment_ids:
+                        a_l.append(r['id'])
+                    self._cr.execute("select aj.name, sum(ap.amount) from account_payment as ap, account_journal as aj " \
+                                    "where ap.journal_id = aj.id  and ap.id IN %s " \
+                                    "group by aj.name ", (tuple(a_l),))
+                    data = self._cr.dictfetchall()
+                    return data
+        else:
+            return {}
+
     #############FACTURA#############
     @api.multi
     def get_invoice_range_no_contr1(self):
@@ -647,7 +680,6 @@ class pos_session(models.Model):
     @api.multi
     def get_invoice_range_no_contr(self):
         invran = '0-0'
-        #datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if self:
             for record in self:
                 start_at = record.start_at
