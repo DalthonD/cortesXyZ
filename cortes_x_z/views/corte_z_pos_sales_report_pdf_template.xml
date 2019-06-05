@@ -87,13 +87,13 @@
                         <span t-esc="o.state"/>
                       </td>
                     </tr-->
-                    <t t-set="var" t-value="o.get_open_close_time(today)">
+                    <t t-set="var" t-value="o.get_open_close_time(today)"/>
                     <tr>
                       <td class="text-left">
                         APERTURA:
                       </td>
                       <td class="text-right">
-                        <span t-esc="o.get_eval_date(today)"/>
+                        <!--span t-esc="o.get_eval_date(today)"/-->
                         <span t-esc="var.get('open_time')"/>
                         <!--span t-esc="o.get_session_time(o.start_at)"/-->
                       </td>
@@ -103,7 +103,7 @@
                         CIERRE:
                       </td>
                       <td class="text-right">
-                        <span t-esc="o.get_eval_date(today)"/>
+                        <!--span t-esc="o.get_eval_date(today)"/-->
                         <span t-esc="var.get('close_time')"/>
                         <!--span t-esc="o.get_session_time(o.stop_at)"/-->
                       </td>
@@ -118,7 +118,7 @@
                     </tr>
                   </table>
                   --------------------------------------------------------
-                  <t t-set="datos" t-value="o.get_invoice_info_z(pos_ids,today)"/>
+                  <t t-set="datos" t-value="o.get_invoice_info_z(today)"/>
                   <table style="width:100%;margin-top:15px;">
                     <tr>
                       <td class="text-left">
@@ -270,7 +270,7 @@
                       <td class="text-right">
                         <!--t t-set="total3" t-value="o.get_total_sales_tickets()"/-->
                         <span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(ticket.get('total_price'))"/>
-                        <span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(o.get_total_sales_tickets_z(today))"/>
+                        <!--span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(o.get_total_sales_tickets_z(today))"/-->
                       </td>
                     </tr>
                   </table>
@@ -285,7 +285,7 @@
                         TOTAL RECARGAS
                       </td>
                       <td class="text-right">
-                        <span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(get_total_wallet_recharges_z(today))"/>
+                        <span t-field="o.currency_id.symbol"/><span t-esc="'{0:.2f}'.format(o.get_total_wallet_recharges_z(today))"/>
                       </td>
                     </tr>
                     <tr>
@@ -313,7 +313,7 @@
                   <t t-set="total2" t-value="0"/>
                   <table style="width:100%;margin-top:15px;">
                     <tr>
-                      <td class="text-left">TIQUETE</td>
+                      <td class="text-left">TIQUETE y RECIBO</td>
                     </tr>
                     <tr t-foreach="o.get_payments_z(today)" t-as="l">
                       <td class="text-left">
@@ -328,7 +328,7 @@
                     <tr>
                       <td class="text-left">FACTURA y CCF</td>
                     </tr>
-                    <tr t-foreach="o.get_payments_invoice_z()" t-as="l">
+                    <tr t-foreach="o.get_payments_invoice_z(today)" t-as="l">
                       <td class="text-left">
                         <span t-esc="l.get('name')"/>
                       </td>
@@ -358,7 +358,7 @@
                       <t t-esc="o.company_id.name"/><br/>
                     </t>
                     <t t-if="o.company_id.street">
-                      <t t-esc="o.get_company_data_x().street"/><br/>
+                      <t t-esc="o.company_id.street"/><br/>
                     </t>
                     <t t-if="o.company_id.street2">
                       <t t-esc="o.company_id.street2"/>
